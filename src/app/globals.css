@@ -128,3 +128,21 @@
     @apply font-sans;
   }
 }
+
+@layer utilities {
+  .flexc {
+    @apply flex flex-row justify-center items-center;
+  }
+  .flexcc {
+    @apply flex flex-col justify-center items-center;
+  }
+  .transall {
+    @apply transition-all ease-in-out duration-150;
+  }
+  .transcenter {
+    @apply fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%];
+  }
+  .atranscenter {
+    @apply absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%];
+  }
+}
