@@ -1,16 +1,31 @@
 "use client";
 
 import { useFileStore } from "@/lib/store";
-import { File, Image as ImageIcon, FileText, Video, Music, MoreVertical, Trash2 } from "lucide-react";
+import {
+  File,
+  Image as ImageIcon,
+  FileText,
+  Video,
+  Music,
+  MoreVertical,
+  Trash2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  DropdownMenuShortcut
+  DropdownMenuShortcut,
 } from "@/components/ui/dropdown-menu";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { useEffect } from "react";
 import { SHORTCUTS } from "@/lib/shortcuts";
 import clsx from "clsx";
@@ -33,17 +48,29 @@ function formatBytes(bytes: number, decimals = 2) {
 }
 
 export function FileGrid() {
-  const { files, deleteFile, searchQuery, selectedFileId, setSelectedFileId, deleteModalOpen, setDeleteModalOpen } = useFileStore();
+  const {
+    files,
+    deleteFile,
+    searchQuery,
+    selectedFileId,
+    setSelectedFileId,
+    deleteModalOpen,
+    setDeleteModalOpen,
+  } = useFileStore();
 
   const filteredFiles = files.filter((f) =>
-    f.name.toLowerCase().includes(searchQuery.toLowerCase())
+    f.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   useEffect(() => {
     const handleGlobalKeyDown = (e: KeyboardEvent) => {
       // Ignore if user is typing
       const activeElement = document.activeElement;
-      if (activeElement && ["INPUT", "TEXTAREA"].includes(activeElement.tagName)) return;
+      if (
+        activeElement &&
+        ["INPUT", "TEXTAREA"].includes(activeElement.tagName)
+      )
+        return;
 
       if (deleteModalOpen) {
         if (SHORTCUTS.CONFIRM_MODAL.includes(e.key)) {
@@ -72,6 +99,23 @@ export function FileGrid() {
     return () => window.removeEventListener("keydown", handleGlobalKeyDown);
   }, [deleteModalOpen, selectedFileId, deleteFile, setDeleteModalOpen, setSelectedFileId]);
 
+  useEffect(() => {
+    const handleGlobalClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      
+      // Abaikan jika user meng-klik komponen Shadcn yang overlay (misal Delete Modal atau Dropdown)
+      if (target.closest('[role="dialog"]') || target.closest('[role="menu"]')) return;
+      
+      // Abaikan jika yang diklik adalah card file itu sendiri (sudah dihandle oleh onClick-nya)
+      if (target.closest('[data-file-card="true"]')) return;
+
+      setSelectedFileId(null);
+    };
+
+    window.addEventListener("click", handleGlobalClick);
+    return () => window.removeEventListener("click", handleGlobalClick);
+  }, [setSelectedFileId]);
+
   if (files.length === 0) {
     return (
       <div className="flexcc flex-1 h-full w-full text-zinc-500 gap-4 mt-20">
@@ -88,16 +132,22 @@ export function FileGrid() {
         const date = new Date(file.uploadedAt).toLocaleDateString("en-US", {
           month: "short",
           day: "numeric",
-          year: "numeric"
+          year: "numeric",
         });
 
         return (
           <div
             key={file.id}
-            onClick={() => setSelectedFileId(file.id)}
+            data-file-card="true"
+            onClick={(e) => {
+              e.stopPropagation();
+              setSelectedFileId(file.id);
+            }}
             className={clsx(
-              "group relative flex flex-col justify-between bg-white border rounded-xl p-4 hover:border-blue-400 hover:shadow-md transall cursor-pointer",
-              selectedFileId === file.id ? "border-blue-500 ring-2 ring-blue-500/20 bg-blue-50/20" : "border-zinc-200"
+              "group relative flex flex-col justify-between bg-white border rounded-xl p-4 hover:border-blue-300 hover:shadow-md transall cursor-pointer",
+              selectedFileId === file.id
+                ? "border-blue-500 ring-2 ring-blue-500/20 bg-blue-50/20"
+                : "border-zinc-200",
             )}
           >
             <div className="flex justify-between items-start mb-4">
@@ -105,12 +155,15 @@ export function FileGrid() {
                 <Icon className="w-8 h-8" />
               </div>
               <DropdownMenu>
-                <DropdownMenuTrigger 
+                <DropdownMenuTrigger
                   render={
-                    <Button variant="ghost" className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transall focus-visible:opacity-100">
+                    <Button
+                      variant="ghost"
+                      className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transall focus-visible:opacity-100"
+                    >
                       <MoreVertical className="w-4 h-4 text-zinc-500" />
                     </Button>
-                  } 
+                  }
                 />
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem
@@ -125,14 +178,19 @@ export function FileGrid() {
                       <Trash2 className="w-4 h-4" />
                       Delete
                     </div>
-                    <DropdownMenuShortcut className="text-red-400">Del</DropdownMenuShortcut>
+                    <DropdownMenuShortcut className="text-red-400">
+                      Del
+                    </DropdownMenuShortcut>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
-            
+
             <div className="flex flex-col gap-0.5">
-              <h3 className="font-semibold text-zinc-900 text-sm truncate" title={file.name}>
+              <h3
+                className="font-semibold text-zinc-900 text-sm truncate"
+                title={file.name}
+              >
                 {file.name}
               </h3>
               <p className="text-xs text-zinc-500">
@@ -155,10 +213,12 @@ export function FileGrid() {
           <DialogHeader>
             <DialogTitle>Confirm Deletion</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete this file? This action cannot be undone.
-              <br/>
+              Are you sure you want to delete this file? This action cannot be
+              undone.
+              <br />
               <span className="inline-block mt-3 text-xs font-medium bg-zinc-100 px-2 py-2 rounded text-zinc-600 border border-zinc-200">
-                Hint: Press <strong>Enter</strong> to confirm, or <strong>Esc</strong> to cancel.
+                Hint: Press <strong>Enter</strong> to confirm, or{" "}
+                <strong>Esc</strong> to cancel.
               </span>
             </DialogDescription>
           </DialogHeader>
@@ -166,13 +226,16 @@ export function FileGrid() {
             <Button variant="outline" onClick={() => setDeleteModalOpen(false)}>
               Cancel
             </Button>
-            <Button variant="destructive" onClick={() => {
-              if (selectedFileId) {
-                deleteFile(selectedFileId);
-                setSelectedFileId(null);
-              }
-              setDeleteModalOpen(false);
-            }}>
+            <Button
+              variant="destructive"
+              onClick={() => {
+                if (selectedFileId) {
+                  deleteFile(selectedFileId);
+                  setSelectedFileId(null);
+                }
+                setDeleteModalOpen(false);
+              }}
+            >
               Delete
             </Button>
           </DialogFooter>
