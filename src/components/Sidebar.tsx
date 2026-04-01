@@ -5,6 +5,8 @@ import clsx from "clsx";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { useFileStore } from "@/lib/store";
+
 const navigation = [
   { name: "My Drive", href: "/", icon: HardDrive },
   { name: "Recent", href: "#", icon: Clock },
@@ -13,6 +15,20 @@ const navigation = [
 
 export function Sidebar() {
   const pathname = usePathname();
+  const files = useFileStore((state) => state.files);
+
+  // 1 GB Limit in bytes
+  const limitBytes = 1024 * 1024 * 1024;
+  const totalBytes = files.reduce((acc, file) => acc + file.size, 0);
+  const percentage = Math.min((totalBytes / limitBytes) * 100, 100).toFixed(1);
+
+  const formatBytes = (bytes: number) => {
+    if (bytes === 0) return "0 B";
+    const k = 1024;
+    const sizes = ["B", "KB", "MB", "GB"];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + " " + sizes[i];
+  };
 
   return (
     <div className={clsx(
@@ -53,12 +69,18 @@ export function Sidebar() {
       <div className="px-6 mt-8">
         <div className="flex items-center justify-between text-xs font-semibold text-zinc-500 mb-2">
           <span>Storage</span>
-          <span>75%</span>
+          <span suppressHydrationWarning>{percentage}%</span>
         </div>
         <div className="h-1.5 w-full bg-zinc-200 rounded-full overflow-hidden">
-          <div className="h-full bg-blue-600 w-[75%] rounded-full" />
+          <div 
+            className="h-full bg-blue-600 rounded-full transall duration-500" 
+            style={{ width: `${percentage}%` }} 
+            suppressHydrationWarning
+          />
         </div>
-        <p className="text-xs text-zinc-500 mt-2">11.2 GB of 15 GB used</p>
+        <p className="text-xs text-zinc-500 mt-2" suppressHydrationWarning>
+          {formatBytes(totalBytes)} of 1 GB used
+        </p>
       </div>
     </div>
   );
