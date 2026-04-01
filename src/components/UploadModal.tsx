@@ -16,7 +16,8 @@ import clsx from "clsx";
 import { useDropzone } from "react-dropzone";
 
 export function UploadModal() {
-  const [open, setOpen] = React.useState(false);
+  const open = useFileStore((state) => state.uploadModalOpen);
+  const setOpen = useFileStore((state) => state.setUploadModalOpen);
   const [uploading, setUploading] = React.useState(false);
   const addFile = useFileStore((state) => state.addFile);
 
@@ -37,7 +38,7 @@ export function UploadModal() {
       setUploading(false);
       setOpen(false); // close modal when done
     }, 1500);
-  }, [addFile]);
+  }, [addFile, setOpen]);
 
   // Kita biarkan user bisa klik untuk upload via tombolnya aja, biar nggk bentrok kalo nyoba ngetik
   const { getRootProps, getInputProps, isDragActive, open: openFileDialog } = useDropzone({

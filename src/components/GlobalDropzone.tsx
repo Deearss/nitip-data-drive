@@ -8,6 +8,7 @@ import { useDropzone } from "react-dropzone";
 
 export function GlobalDropzone({ children }: { children: React.ReactNode }) {
   const addFile = useFileStore((state) => state.addFile);
+  const isUploadModalOpen = useFileStore((state) => state.uploadModalOpen);
 
   const onDrop = React.useCallback((acceptedFiles: File[]) => {
     acceptedFiles.forEach((file) => {
@@ -23,6 +24,7 @@ export function GlobalDropzone({ children }: { children: React.ReactNode }) {
     onDrop,
     noClick: true, // Menghindari seluruh window memicu modal file upload kalo di klik
     noKeyboard: true,
+    disabled: isUploadModalOpen, // Matikan dropzone global kalo modal UI lagi kebuka, mencegah duplikasi trigger drop event React
   });
 
   return (

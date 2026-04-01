@@ -15,6 +15,8 @@ interface FileStoreState {
   deleteFile: (id: string) => void;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
+  uploadModalOpen: boolean;
+  setUploadModalOpen: (open: boolean) => void;
 }
 
 export const useFileStore = create<FileStoreState>()(
@@ -38,9 +40,12 @@ export const useFileStore = create<FileStoreState>()(
         })),
       searchQuery: "",
       setSearchQuery: (query) => set({ searchQuery: query }),
+      uploadModalOpen: false,
+      setUploadModalOpen: (open) => set({ uploadModalOpen: open }),
     }),
     {
       name: "nitip-data-drive-storage", // nama key di localStorage
+      partialize: (state) => ({ files: state.files }), // Cuma persist files aja biar state UI nggak nyangku pass direfresh
     }
   )
 );
