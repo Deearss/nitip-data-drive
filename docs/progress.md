@@ -7,9 +7,9 @@
 - ✅ Structured AI maintenance docs (`/docs/*`, `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`).
 
 ## What's In Progress
-- Semuanya sudah terselesaikan untuk MVP pertama.
+- Semuanya sudah terselesaikan untuk MVP pertama, termasuk update Drag & Drop.
 
 ## What's Next
-- Implementasi fitur drag & drop untuk simulasi upload yang lebih mulus.
 - Implementasi fungsionalitas view File (seperti memutar audio/video dummy atau preview gambar placeholder).
 - Integrasi logic sistem Folder (nested mapping di Zustand).
+- Optimalisasi Responsivitas Mobile (Sidebar Drawer).
