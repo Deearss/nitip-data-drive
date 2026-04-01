@@ -63,12 +63,13 @@ export function FileGrid() {
                 <Icon className="w-8 h-8" />
               </div>
               <DropdownMenu>
-                {/* @ts-expect-error type conflict with react 19 */}
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transall focus-visible:opacity-100">
-                    <MoreVertical className="w-4 h-4 text-zinc-500" />
-                  </Button>
-                </DropdownMenuTrigger>
+                <DropdownMenuTrigger 
+                  render={
+                    <Button variant="ghost" className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transall focus-visible:opacity-100">
+                      <MoreVertical className="w-4 h-4 text-zinc-500" />
+                    </Button>
+                  } 
+                />
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem
                     className="text-red-600 focus:bg-red-50 focus:text-red-700 cursor-pointer flex items-center gap-2"

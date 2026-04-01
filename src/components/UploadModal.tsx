@@ -26,7 +26,7 @@ export function UploadModal() {
     if (!files || files.length === 0) return;
 
     setUploading(true);
-    
+
     // Simulate upload delay for UI premium feel
     setTimeout(() => {
       Array.from(files).forEach((file) => {
@@ -43,22 +43,24 @@ export function UploadModal() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      {/* @ts-expect-error type conflict with react 19 */}
-      <DialogTrigger asChild>
-        <Button className="gap-2 shadow-md hover:shadow-lg transall">
-          <UploadCloud className="w-4 h-4" />
-          New File
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
+      <DialogTrigger
+        render={
+          <Button className="gap-2 shadow-md hover:shadow-lg transall">
+            <UploadCloud className="w-4 h-4" />
+            New File
+          </Button>
+        }
+      />
+      <DialogContent className="sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle>Upload File</DialogTitle>
           <DialogDescription>
-            Select a file to sync to your local drive. This is just a dummy simulation.
+            Select a file to sync to your local drive. This is just a dummy
+            simulation.
           </DialogDescription>
         </DialogHeader>
 
-        <div className="flexc w-full p-8 border-2 border-dashed border-zinc-200 rounded-xl bg-zinc-50 flex-col gap-4 text-center mt-4">
+        <div className="flexcc w-full p-8 border-2 border-dashed border-zinc-200 rounded-xl bg-zinc-50 flex-col gap-4 text-center mt-4">
           {uploading ? (
             <div className="flexcc gap-4 animate-pulse">
               <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
@@ -66,14 +68,22 @@ export function UploadModal() {
             </div>
           ) : (
             <>
-              <div className="flexc w-16 h-16 bg-blue-100 rounded-full text-blue-600 mb-2">
+              <div className="flexc size-16 bg-blue-100 rounded-full text-blue-600 mb-2">
                 <UploadCloud className="w-8 h-8" />
               </div>
               <div>
-                <p className="text-sm font-medium text-zinc-900">Drag and drop features not available yet.</p>
-                <p className="text-sm text-zinc-500 mt-1">Click the button below to open file picker.</p>
+                <p className="text-sm font-medium text-zinc-900">
+                  Drag and drop features not available yet.
+                </p>
+                <p className="text-sm text-zinc-500 mt-1">
+                  Click the button below to open file picker.
+                </p>
               </div>
-              <Button onClick={() => fileInputRef.current?.click()} variant="outline" className="mt-2">
+              <Button
+                onClick={() => fileInputRef.current?.click()}
+                variant="outline"
+                className="mt-2"
+              >
                 Browse Files
               </Button>
               <input
