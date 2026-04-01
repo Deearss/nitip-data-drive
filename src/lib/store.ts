@@ -17,6 +17,10 @@ interface FileStoreState {
   setSearchQuery: (query: string) => void;
   uploadModalOpen: boolean;
   setUploadModalOpen: (open: boolean) => void;
+  selectedFileId: string | null;
+  setSelectedFileId: (id: string | null) => void;
+  deleteModalOpen: boolean;
+  setDeleteModalOpen: (open: boolean) => void;
 }
 
 export const useFileStore = create<FileStoreState>()(
@@ -42,6 +46,10 @@ export const useFileStore = create<FileStoreState>()(
       setSearchQuery: (query) => set({ searchQuery: query }),
       uploadModalOpen: false,
       setUploadModalOpen: (open) => set({ uploadModalOpen: open }),
+      selectedFileId: null,
+      setSelectedFileId: (id) => set({ selectedFileId: id }),
+      deleteModalOpen: false,
+      setDeleteModalOpen: (open) => set({ deleteModalOpen: open }),
     }),
     {
       name: "nitip-data-drive-storage", // nama key di localStorage

@@ -8,6 +8,7 @@
 
 ## What's In Progress
 - Semuanya sudah terselesaikan untuk MVP pertama, termasuk update Drag & Drop.
+- Implementasi seleksi file, manajemen konfigurasi tombol shortcut, keyboard event global, dan dialog pop-up konfirmasi delete.
 
 ## What's Next
 - Implementasi fungsionalitas view File (seperti memutar audio/video dummy atau preview gambar placeholder).
